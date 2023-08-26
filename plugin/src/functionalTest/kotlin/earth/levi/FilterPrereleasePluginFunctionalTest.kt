@@ -17,15 +17,30 @@ class FilterPrereleasePluginFunctionalTest {
     @field:TempDir
     lateinit var projectDir: File
 
-    private val buildFile by lazy { projectDir.resolve("build.gradle") }
+    private val buildFile by lazy { projectDir.resolve("app/build.gradle") }
     private val settingsFile by lazy { projectDir.resolve("settings.gradle") }
 
     @Test fun `can run task`() {
+        projectDir.resolve("app").mkdir()
+
         // Set up the test build
-        settingsFile.writeText("")
+        settingsFile.writeText("include(\"app\")")
         buildFile.writeText("""
             plugins {
-                id('earth.levi.greeting')
+                id('earth.levi.filter-prerelease')
+                id('java')  
+            }   
+            
+            filterPrerelease {
+                allowReleaseCandidate = true
+            }
+            
+            repositories {
+                mavenCentral()
+            }                    
+            
+            dependencies {
+              implementation 'app.cash.sqldelight:sqlite-driver:2.0.0'
             }
         """.trimIndent())
 
@@ -33,11 +48,11 @@ class FilterPrereleasePluginFunctionalTest {
         val runner = GradleRunner.create()
         runner.forwardOutput()
         runner.withPluginClasspath()
-        runner.withArguments("greeting")
+        runner.withArguments(":app:dependencies")
         runner.withProjectDir(projectDir)
         val result = runner.build()
 
         // Verify the result
-        assertTrue(result.output.contains("Hello from plugin 'earth.levi.greeting'"))
+        assertTrue(result.output.contains("app.cash.sqldelight:sqlite-driver:2.0.0"))
     }
 }
