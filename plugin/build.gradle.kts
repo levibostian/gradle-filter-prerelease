@@ -27,8 +27,8 @@ dependencies {
 
 gradlePlugin {
     // Define the plugin
-    val greeting by plugins.creating {
-        id = "earth.levi.greeting"
+    val plugin by plugins.creating {
+        id = "earth.levi.filter-prerelease"
         implementationClass = "earth.levi.FilterPrereleasePlugin"
     }
 }
