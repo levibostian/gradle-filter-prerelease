@@ -18,12 +18,11 @@ class FilterPrereleasePlugin: Plugin<Project> {
     override fun apply(project: Project) {
         val pluginConfig = project.extensions.create("filterPrerelease", FilterPrereleaseExtension::class.java)
 
-        //project.allprojects {
-            project.configurations.all {
-                it.resolutionStrategy {
-                    // Filters dependency versions based on criteria.
-                    // Called a Component Selection Rule: https://docs.gradle.org/current/userguide/dynamic_versions.html#sec:component_selection_rules
-                    it.componentSelection {
+        project.configurations.all {
+            it.resolutionStrategy {
+                // Filters dependency versions based on criteria.
+                // Called a Component Selection Rule: https://docs.gradle.org/current/userguide/dynamic_versions.html#sec:component_selection_rules
+                it.componentSelection {
                         it.all {
                             // You can make exclusions if you want by adding conditionals for candidate group, name, version, etc.
                             // version is determiend by the highest version not rejected.

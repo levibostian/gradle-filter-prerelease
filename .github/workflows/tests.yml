@@ -3,7 +3,7 @@ name: Tests
 on: [pull_request]
 
 jobs:
-  build:
+  run-automated-functional-tests:
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write # to create status checks for test results 
@@ -22,17 +22,18 @@ jobs:
       uses: gradle/gradle-build-action@v2
 
     - name: Setup test artifact in Maven local repository for automated tests to read from 
-      run: ./testMavenArtifact/publish-builds-for-tests.sh 
+      working-directory: ./testMavenArtifact
+      run: ./publish-builds-for-tests.sh 
 
     # Always succeed to allow the next step to run even if tests fail
     # The parsing of test results will fail if a test fails or if no tests were found 
     - name: Run automated tests
-      run: ./gradlew :plugin:test || true 
+      run: ./gradlew :plugin:functionalTest || true 
   
     - name: Parse test results 
       uses: mikepenz/action-junit-report@v3
       with:
-        report_paths: 'plugin/build/test-results/**/TEST-*.xml'
+        report_paths: 'plugin/build/test-results/functionalTest/TEST-*.xml'
         check_name: 'Automated tests'
         fail_on_failure: true
         require_tests: true      
