@@ -3,6 +3,7 @@
  */
 package earth.levi
 
+import org.gradle.testkit.runner.BuildResult
 import java.io.File
 import kotlin.test.assertTrue
 import kotlin.test.Test
@@ -17,27 +18,74 @@ class FilterPrereleasePluginFunctionalTest {
     @field:TempDir
     lateinit var projectDir: File
 
-    private val buildFile by lazy { projectDir.resolve("build.gradle") }
+    private val buildFile by lazy { projectDir.resolve("app/build.gradle") }
     private val settingsFile by lazy { projectDir.resolve("settings.gradle") }
 
-    @Test fun `can run task`() {
+    @Test fun `given only allow stable, expect to get latest stable`() {
+        setupMockProject()
+
+        val result = runTask()
+
+        assertTrue(result.output.contains("earth.levi:gradle-filter-prerelease-test-artifact:+ -> 1.0.0"))
+    }
+
+    @Test fun `given allow RC, expect to get latest RC release`() {
+        setupMockProject(allowRc = true)
+
+        val result = runTask()
+
+        assertTrue(result.output.contains("earth.levi:gradle-filter-prerelease-test-artifact:+ -> 2.0.0-rc.1"))
+    }
+
+    @Test fun `given allow beta, expect to get latest beta release`() {
+        setupMockProject(allowRc = true, allowBeta = true)
+
+        val result = runTask()
+
+        assertTrue(result.output.contains("earth.levi:gradle-filter-prerelease-test-artifact:+ -> 3.0.0-beta.1"))
+    }
+
+    @Test fun `given allow alpha, expect to get latest alpha release`() {
+        setupMockProject(allowRc = true, allowBeta = true, allowAlpha = true)
+
+        val result = runTask()
+
+        assertTrue(result.output.contains("earth.levi:gradle-filter-prerelease-test-artifact:+ -> 4.0.0-alpha.1"))
+    }
+
+    private fun setupMockProject(allowRc: Boolean = false, allowBeta: Boolean = false, allowAlpha: Boolean = false) {
+        projectDir.resolve("app").mkdir()
+
         // Set up the test build
-        settingsFile.writeText("")
+        settingsFile.writeText("include(\"app\")")
         buildFile.writeText("""
             plugins {
-                id('earth.levi.greeting')
+                id('earth.levi.filter-prerelease')
+                id('java')  
+            }   
+            
+            filterPrerelease {
+                allowReleaseCandidate = $allowRc
+                allowBeta = $allowBeta
+                allowAlpha = $allowAlpha 
+            }
+            
+            repositories {
+                mavenLocal()
+            }                    
+            
+            dependencies {
+              implementation 'earth.levi:gradle-filter-prerelease-test-artifact:+'
             }
         """.trimIndent())
+    }
 
-        // Run the build
+    private fun runTask(): BuildResult {
         val runner = GradleRunner.create()
         runner.forwardOutput()
         runner.withPluginClasspath()
-        runner.withArguments("greeting")
+        runner.withArguments(":app:dependencies")
         runner.withProjectDir(projectDir)
-        val result = runner.build()
-
-        // Verify the result
-        assertTrue(result.output.contains("Hello from plugin 'earth.levi.greeting'"))
+        return runner.build()
     }
 }

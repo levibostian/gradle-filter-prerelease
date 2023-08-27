@@ -1,0 +1,39 @@
+name: Tests 
+
+on: [pull_request]
+
+jobs:
+  run-automated-functional-tests:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write # to create status checks for test results 
+      checks: write # to create status checks for test results
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-java@v3
+      with:
+        distribution: 'temurin'
+        java-version: '17' 
+
+    - name: Verify gradle scripts are not modified 
+      uses: gradle/wrapper-validation-action@v1
+    
+    - name: Setup Gradle and cache dependencies between builds 
+      uses: gradle/gradle-build-action@v2
+
+    - name: Setup test artifact in Maven local repository for automated tests to read from 
+      working-directory: ./testMavenArtifact
+      run: ./publish-builds-for-tests.sh 
+
+    # Always succeed to allow the next step to run even if tests fail
+    # The parsing of test results will fail if a test fails or if no tests were found 
+    - name: Run automated tests
+      run: ./gradlew :plugin:functionalTest || true 
+  
+    - name: Parse test results 
+      uses: mikepenz/action-junit-report@v3
+      with:
+        report_paths: 'plugin/build/test-results/functionalTest/TEST-*.xml'
+        check_name: 'Automated tests'
+        fail_on_failure: true
+        require_tests: true      
