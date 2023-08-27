@@ -10,8 +10,6 @@ open class FilterPrereleaseExtension {
     var allowAlpha = false
     var allowBeta = false
     var allowReleaseCandidate = false
-    var allowSnapshot = false
-    var customTypesToFilter: List<String> = emptyList() // example: ["-foo", "-bar"]
 }
 
 class FilterPrereleasePlugin: Plugin<Project> {
@@ -25,7 +23,7 @@ class FilterPrereleasePlugin: Plugin<Project> {
                 it.componentSelection {
                         it.all {
                             // You can make exclusions if you want by adding conditionals for candidate group, name, version, etc.
-                            // version is determiend by the highest version not rejected.
+                            // version is determined by the highest version not rejected.
 
                             if (it.candidate.version.contains("-alpha") && !pluginConfig.allowAlpha) {
                                 it.reject("version is an alpha release")
@@ -37,16 +35,6 @@ class FilterPrereleasePlugin: Plugin<Project> {
 
                             if (it.candidate.version.contains("-rc") && !pluginConfig.allowReleaseCandidate) {
                                 it.reject("version is a release candidate")
-                            }
-
-                            if (it.candidate.version.contains("-SNAPSHOT") && !pluginConfig.allowSnapshot) {
-                                it.reject("version is a snapshot release")
-                            }
-
-                            pluginConfig.customTypesToFilter.forEach { customType ->
-                                if (it.candidate.version.contains(customType)) {
-                                    it.reject("version is a $customType release")
-                                }
                             }
                         }
                     }
