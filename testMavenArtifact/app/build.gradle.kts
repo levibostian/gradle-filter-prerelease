@@ -6,47 +6,33 @@
  */
 
 plugins {
-    // Apply the application plugin to add support for building a CLI application in Java.
     application
     id("maven-publish")
 }
 
 repositories {
-    // Use Maven Central for resolving dependencies.
     mavenCentral()
 }
 
-dependencies {
-
-}
+dependencies {}
 
 publishing {
-    repositories {
-        maven {
-            name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/levibostian/gradle-filter-prerelease")
-            credentials {
-                username = System.getenv("USERNAME") // github username
-                password = System.getenv("TOKEN") // personal access token with write:packages permission
-            }
-        }
-    }
     publications {
         register<MavenPublication>("plugin") {
             from(components["java"])
             groupId = "earth.levi"
             artifactId = "gradle-filter-prerelease-test-artifact"
-            version = "1.0.0"
+            version = System.getenv("VERSION")
         }
     }
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
-java {
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(17))
-    }
-}
+//java {
+//    toolchain {
+        //languageVersion.set(JavaLanguageVersion.of(17))
+    //}
+//}
 
 application {
     // Define the main class for the application.

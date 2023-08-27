@@ -18,8 +18,8 @@ class FilterPrereleasePlugin: Plugin<Project> {
     override fun apply(project: Project) {
         val pluginConfig = project.extensions.create("filterPrerelease", FilterPrereleaseExtension::class.java)
 
-        project.allprojects {
-            it.configurations.all {
+        //project.allprojects {
+            project.configurations.all {
                 it.resolutionStrategy {
                     // Filters dependency versions based on criteria.
                     // Called a Component Selection Rule: https://docs.gradle.org/current/userguide/dynamic_versions.html#sec:component_selection_rules
@@ -53,6 +53,6 @@ class FilterPrereleasePlugin: Plugin<Project> {
                     }
                 }
             }
-        }
+        //}
     }
 }
