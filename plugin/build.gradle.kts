@@ -22,7 +22,7 @@ dependencies {
 
 // used by gradle plugin publish plugin 
 group = "earth.levi"
-version = System.getenv("VERSION") ?: "local"
+version = System.getenv("PLUGIN_VERSION") ?: "local"
 
 gradlePlugin {
     plugins {
