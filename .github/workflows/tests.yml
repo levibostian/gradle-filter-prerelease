@@ -10,16 +10,7 @@ jobs:
       checks: write # to create status checks for test results
     steps:
     - uses: actions/checkout@v3
-    - uses: actions/setup-java@v3
-      with:
-        distribution: 'temurin'
-        java-version: '17' 
-
-    - name: Verify gradle scripts are not modified 
-      uses: gradle/wrapper-validation-action@v1
-    
-    - name: Setup Gradle and cache dependencies between builds 
-      uses: gradle/gradle-build-action@v2
+    - uses: ./.github/actions/setup
 
     - name: Setup test artifact in Maven local repository for automated tests to read from 
       working-directory: ./testMavenArtifact

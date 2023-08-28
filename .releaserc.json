@@ -1,0 +1,25 @@
+{
+    "tagFormat": "${version}",
+    "branches": [
+        "main",
+        { "name": "beta", "prerelease": true },
+        { "name": "alpha", "prerelease": true }
+    ],
+    "plugins": [
+        ["@semantic-release/commit-analyzer", {
+            "preset": "conventionalcommits"
+        }],
+        ["@semantic-release/release-notes-generator", {
+            "preset": "conventionalcommits"
+        }],
+        ["@semantic-release/github", {
+            "labels": false,
+            "successComment": false,
+            "failTitle": false
+        }],
+        "@semantic-release/git",
+        ["@semantic-release/exec", {
+            "publishCmd": "PLUGIN_VERSION=${nextRelease.version} ./gradlew :plugin:publishPlugins"
+        }]
+    ]
+}

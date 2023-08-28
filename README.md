@@ -83,4 +83,17 @@ pluginManagement {
 }
 ```
 
+## Deployment 
+
+We deploy to the [Gradle Plugin Portal](https://plugins.gradle.org/) to make using the plugin very easy. 
+
+* [Register for an account](https://plugins.gradle.org/user/register) with the Gradle Plugin Portal to get your set of API keys. 
+
+* Set some environment variable secrets for GitHub Actions:
+
+1. `GRADLE_PUBLISH_KEY` API key you received after registering with Gradle Plugin Portal. 
+2. `GRADLE_PUBLISH_SECRET` API key secret you received after registering with Gradle Plugin Portal. 
+
+* Done! The semantic-release tool will now deploy your gradle plugin to the portal every time you deploy a new version of the project. 
+
 
