@@ -5,37 +5,36 @@
  * For more details on writing Custom Plugins, please refer to https://docs.gradle.org/8.3/userguide/custom_plugins.html in the Gradle documentation.
  */
 
-plugins {
-    // Apply the Java Gradle plugin development plugin to add support for developing Gradle plugins
-    `java-gradle-plugin`
-
-    // Apply the Kotlin JVM plugin to add support for Kotlin.
-    id("org.jetbrains.kotlin.jvm") version "1.9.0"
+plugins {    
+    `java-gradle-plugin` // Apply the Java Gradle plugin development plugin to add support for developing Gradle plugins
+    id("org.jetbrains.kotlin.jvm") version "1.9.0" // enables kotlin lang 
+    id("com.gradle.plugin-publish") version "1.2.1" // enables publishing to gradle plugin portal
 }
 
 repositories {
-    // Use Maven Central for resolving dependencies.
     mavenCentral()
 }
 
-dependencies {
-    // Use the Kotlin JUnit 5 integration.
+dependencies {    
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
-
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
+// used by gradle plugin publish plugin 
+group = "earth.levi"
+version = System.getenv("VERSION") ?: "local"
+
 gradlePlugin {
-    // Define the plugin
-    val plugin by plugins.creating {
-        id = "earth.levi.filter-prerelease"
-        implementationClass = "earth.levi.FilterPrereleasePlugin"
+    plugins {
+        create("filterPrereleasePlugin") {
+            id = "earth.levi.filter-prerelease"
+            implementationClass = "earth.levi.FilterPrereleasePlugin"
+        }
     }
 }
 
 // Add a source set for the functional test suite
-val functionalTestSourceSet = sourceSets.create("functionalTest") {
-}
+val functionalTestSourceSet = sourceSets.create("functionalTest") {}
 
 configurations["functionalTestImplementation"].extendsFrom(configurations["testImplementation"])
 configurations["functionalTestRuntimeOnly"].extendsFrom(configurations["testRuntimeOnly"])

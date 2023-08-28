@@ -11,7 +11,8 @@ import org.gradle.testkit.runner.GradleRunner
 import org.junit.jupiter.api.io.TempDir
 
 /**
- * A simple functional test for the 'earth.levi.greeting' plugin.
+ * Note: These tests depend on the test artifact being published to the local Maven repository.
+         Run the script `publish-builds-for-tests.sh` in the `testMavenArtifact` direcotry to publish the test artifact.
  */
 class FilterPrereleasePluginFunctionalTest {
 
