@@ -10,7 +10,7 @@ jobs:
       checks: write # to create status checks for test results
     steps:
     - uses: actions/checkout@v3
-    - uses: ./github/actions/setup
+    - uses: ./.github/actions/setup
 
     - name: Setup test artifact in Maven local repository for automated tests to read from 
       working-directory: ./testMavenArtifact
