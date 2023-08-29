@@ -17,10 +17,11 @@ jobs:
       - name: Deploy git tag and Gradle plugin release via Semantic Release 
         uses: cycjimmy/semantic-release-action@v3
         with: 
+          # Hard-coding version as workaround https://github.com/semantic-release/commit-analyzer/issues/517#issuecomment-1697193361
           extra_plugins: |
             @semantic-release/git
             @semantic-release/exec
-            conventional-changelog-conventionalcommits
+            conventional-changelog-conventionalcommits@6.1.0 
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GRADLE_PUBLISH_KEY: ${{ secrets.GRADLE_PUBLISH_KEY }}
