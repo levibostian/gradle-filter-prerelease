@@ -24,11 +24,18 @@ dependencies {
 group = "earth.levi"
 version = System.getenv("PLUGIN_VERSION") ?: "local"
 
+// configure 'com.gradle.plugin-publish'. from: https://docs.gradle.org/current/userguide/publishing_gradle_plugins.html#configure_the_plugin_publishing_plugin
 gradlePlugin {
+    website.set("https://github.com/levibostian/gradle-filter-prerelease") 
+    vcsUrl.set("https://github.com/levibostian/gradle-filter-prerelease")
+
     plugins {
         create("filterPrereleasePlugin") {
             id = "earth.levi.filter-prerelease"
             implementationClass = "earth.levi.FilterPrereleasePlugin"
+            displayName = "filter pre-release versions" 
+            description = "Gradle plugin that filters pre-release versions of dependencies. This plugin is mostly useful for Gradle projects using version ranges." 
+            tags.set(listOf("dependencies", "gradle", "pre-release", "versions", "prerelease", "filter")) 
         }
     }
 }

@@ -28,3 +28,11 @@ jobs:
         check_name: 'Automated tests'
         fail_on_failure: true
         require_tests: true      
+
+  publish-dry-run:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: ./.github/actions/setup
+    - name: Dry-run publish to confirm there are no errors reported by tool for bad configuration
+      run: ./gradlew :plugin:publishPlugins --dry-run
