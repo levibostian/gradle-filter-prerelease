@@ -35,7 +35,7 @@ gradlePlugin {
             implementationClass = "earth.levi.FilterPrereleasePlugin"
             displayName = "filter pre-release versions" 
             description = "Gradle plugin that filters pre-release versions of dependencies. This plugin is mostly useful for Gradle projects using version ranges." 
-            tags.set(listOf("dependencies", "gradle", "pre-release", "versions", "prerelease", "filter")) 
+            tags.set(listOf("dependencies", "pre-release", "versions", "prerelease", "filter")) 
         }
     }
 }
